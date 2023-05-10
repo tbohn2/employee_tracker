@@ -78,9 +78,10 @@ function addEmployee() {
                 message: 'What is the last name of the employee? '
             },
             {
-                type: 'input',
+                type: 'list',
                 name: 'role',
-                message: 'What is the role of the employee? '
+                message: 'What is the role of the employee? ',
+                choices: ['Head Doctor', 'Affiliate Doctor', 'Lead Assistant', 'Assistant', 'Sterile Tech', 'Front Lead', 'Treatment Coordinator', 'Receptionist', 'Auditor', 'Insurance Verification']
             },
             {
                 type: 'list',
@@ -90,29 +91,54 @@ function addEmployee() {
             },
         ])
         .then((selection) => {
+            let mFirst
+            let mLast
+            let mID
             db.query(`SELECT first_name, last_name FROM employee WHERE manager_id IS NULL;`, [], (err, results) => {
                 for (let i = 0; i < results.length; i++) {
                     if (results[i].first_name + " " + results[i].last_name === selection.manager) {
-                        console.log("yo it worked for" + selection.manager);
+                        mFirst = results[i].first_name;
+                        mLast = results[i].last_name;
                     }
                 }
-                startSelect()
+                db.query(`SELECT id FROM employee WHERE first_name = '${mFirst}' AND last_name = '${mLast}';`, [], (err, results) => {
+                    mID = results[0].id;
+                })
             })
 
-            //         const sql = `SELECT e.id, e.first_name AS 'First Name', e.last_name AS 'Last Name', role.title AS 'Job Title', department.name AS 'Department', role.salary AS Salary, CONCAT(m.first_name, ' ', m.last_name) AS 'Manager'
-            // FROM employee e 
-            // JOIN role ON e.role_id = role.id
-            // JOIN department ON role.department_id = department.id
-            // LEFT JOIN employee m ON e.manager_id = m.id;`;
-            //         const params = [];
-            //         db.query(sql, params, (err, result) => {
-            //             if (err) {
-            //                 console.log('oh no!');
-            //             }
-            //             console.table(result)
-            //         });
-            //         startSelect();
+            let roleID
+            db.query(`SELECT * FROM role;`, [], (err, results) => {
+                for (let i = 0; i < results.length; i++) {
+                    if (results[i].title === selection.role) {
+                        roleID = results[i].id;
+                        console.log(roleID);
+                    }
+                }
+            })
+            return
         })
+        .then(() => {
+            db.query()
+        })
+
+    // startSelect()
+
+    //         const sql = `SELECT e.id, e.first_name AS 'First Name', e.last_name AS 'Last Name', role.title AS 'Job Title', department.name AS 'Department', role.salary AS Salary, CONCAT(m.first_name, ' ', m.last_name) AS 'Manager'
+    // FROM employee e 
+    // JOIN role ON e.role_id = role.id
+    // JOIN department ON role.department_id = department.id
+    // LEFT JOIN employee m ON e.manager_id = m.id;`;
+    //         const params = [];
+    //         db.query(sql, params, (err, result) => {
+    //             if (err) {
+    //                 console.log('oh no!');
+    //             }
+    //             console.table(result)
+    //         });
+    //         startSelect();
+
+
+
 }
 
 

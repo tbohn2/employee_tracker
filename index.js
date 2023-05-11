@@ -91,34 +91,44 @@ function addEmployee() {
             },
         ])
         .then((selection) => {
+            const fName = selection.firstName
+            const lName = selection.lastName
             let mFirst
             let mLast
             let mID
-            db.query(`SELECT first_name, last_name FROM employee WHERE manager_id IS NULL;`, [], (err, results) => {
-                for (let i = 0; i < results.length; i++) {
-                    if (results[i].first_name + " " + results[i].last_name === selection.manager) {
-                        mFirst = results[i].first_name;
-                        mLast = results[i].last_name;
-                    }
-                }
-                db.query(`SELECT id FROM employee WHERE first_name = '${mFirst}' AND last_name = '${mLast}';`, [], (err, results) => {
-                    mID = results[0].id;
-                })
-            })
-
             let roleID
-            db.query(`SELECT * FROM role;`, [], (err, results) => {
-                for (let i = 0; i < results.length; i++) {
-                    if (results[i].title === selection.role) {
-                        roleID = results[i].id;
-                        console.log(roleID);
+            findID()
+            function findID() {
+                db.query(`SELECT * FROM role;`, [], (err, results) => {
+                    for (let i = 0; i < results.length; i++) {
+                        if (results[i].title === selection.role) {
+                            roleID = results[i].id;
+                            console.log(roleID);
+                        }
                     }
-                }
-            })
-            return
-        })
-        .then(() => {
-            db.query()
+                })
+                db.query(`SELECT first_name, last_name FROM employee WHERE manager_id IS NULL;`, [], (err, results) => {
+                    for (let i = 0; i < results.length; i++) {
+                        if (results[i].first_name + " " + results[i].last_name === selection.manager) {
+                            mFirst = results[i].first_name;
+                            mLast = results[i].last_name;
+                        }
+                    }
+                    db.query(`SELECT id FROM employee WHERE first_name = '${mFirst}' AND last_name = '${mLast}';`, [], (err, results) => {
+                        mID = results[0].id;
+                        console.log(mID);
+                        insertEmployee()
+                    })
+                })
+            }
+            function insertEmployee() {
+                const sql = `INSERT INTO employee (first_name, last_name, role_id, manager_id) 
+                    VALUES ('${fName}', '${lName}', ${roleID}, ${mID})`
+                console.log(sql);
+                db.query(sql, [], (err, results) => {
+                    console.log(results);
+                })
+            }
         })
 
     // startSelect()

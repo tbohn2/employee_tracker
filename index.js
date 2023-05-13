@@ -43,7 +43,8 @@ const startSelect = () =>
                 display.viewAll()
             }
             if (selection.selection1 === 'Add Department') {
-                console.log('hi');
+                const display = new Department
+                display.addNew()
             }
             if (selection.selection1 === 'Quit') {
                 console.log('hi');
@@ -202,6 +203,30 @@ class Department extends Workplace {
             const sql = `SELECT id, name AS 'Department Names' FROM department; `;
             const params = [];
             this.view(sql, params)
+        }
+        this.addNew = () => {
+            inquirer
+                .prompt([
+                    {
+                        type: 'input',
+                        name: 'name',
+                        message: 'What is the name of the new department? '
+                    },
+                ])
+                .then((selection) => {
+                    const deptName = selection.name
+                    insertDept(deptName)
+                    function insertDept(name) {
+                        const sql = `INSERT INTO department (name) 
+                            VALUES ('${name}')`
+                        const params = []
+                        console.log('New department added');
+                        db.query(sql, params, (err, results) => {
+                            if (err) { console.log(err); }
+                            startSelect()
+                        })
+                    }
+                })
         }
     }
 }

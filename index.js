@@ -76,7 +76,6 @@ class Employee extends Workplace {
             const params = [];
             this.view(sql, params)
         }
-
         this.addNew = () => {
             inquirer
                 .prompt([
@@ -147,6 +146,28 @@ class Role extends Workplace {
             JOIN department ON role.department_id = department.id;`;
             const params = [];
             this.view(sql, params)
+        }
+        this.addNew = () => {
+            inquirer
+                .prompt([
+                    {
+                        type: 'input',
+                        name: 'title',
+                        message: 'What is the title of the new role? '
+                    },
+                    {
+                        type: 'input',
+                        name: 'salary',
+                        message: 'What is the annual salary of the role? '
+                    },
+                    {
+                        type: 'list',
+                        name: 'role',
+                        message: 'Which department will contain this role? ',
+                        choices: ['Doctors', 'Clinical Support', 'Patient Coordination', 'Insurance']
+                    },
+                ])
+                .then((selection) => { })
         }
     }
 }

@@ -22,7 +22,6 @@ const startSelect = () =>
             if (selection.selection1 === 'View All Employees') {
                 const display = new Employee
                 display.viewAll()
-                console.log('All employees');
             }
             if (selection.selection1 === 'Add Employee') {
                 addEmployee();
@@ -31,13 +30,15 @@ const startSelect = () =>
                 console.log('hi');
             }
             if (selection.selection1 === 'View All Roles') {
-                console.log('hi');
+                const display = new Role
+                display.viewAll()
             }
             if (selection.selection1 === 'Add Role') {
                 console.log('hi');
             }
             if (selection.selection1 === 'View All Departments') {
-                console.log('hi');
+                const display = new Department
+                display.viewAll()
             }
             if (selection.selection1 === 'Add Department') {
                 console.log('hi');
@@ -71,6 +72,30 @@ class Employee extends Workplace {
     JOIN role ON e.role_id = role.id
     JOIN department ON role.department_id = department.id
     LEFT JOIN employee m ON e.manager_id = m.id;`;
+            const params = [];
+            this.view(sql, params)
+        }
+    }
+}
+
+class Role extends Workplace {
+    constructor() {
+        super()
+        this.viewAll = () => {
+            const sql = `SELECT role.id, title AS 'Job Title', department.name AS 'Department', salary AS 'Salary'
+            FROM role 
+            JOIN department ON role.department_id = department.id;`;
+            const params = [];
+            this.view(sql, params)
+        }
+    }
+}
+
+class Department extends Workplace {
+    constructor() {
+        super()
+        this.viewAll = () => {
+            const sql = `SELECT id, name AS 'Department Names' FROM department; `;
             const params = [];
             this.view(sql, params)
         }

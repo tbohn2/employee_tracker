@@ -20,7 +20,8 @@ const startSelect = () =>
         ])
         .then((selection) => {
             if (selection.selection1 === 'View All Employees') {
-                viewAllEmployees()
+                const display = new Employee
+                display.viewAll()
                 console.log('All employees');
             }
             if (selection.selection1 === 'Add Employee') {
@@ -46,6 +47,35 @@ const startSelect = () =>
             }
         }
         )
+
+class Workplace {
+    constructor() {
+        this.view = (sql, params) => {
+            db.query(sql, params, (err, result) => {
+                if (err) {
+                    console.log('oh no!');
+                }
+                console.table(result)
+                startSelect();
+            });
+        }
+    }
+};
+
+class Employee extends Workplace {
+    constructor() {
+        super()
+        this.viewAll = () => {
+            const sql = `SELECT e.id, e.first_name AS 'First Name', e.last_name AS 'Last Name', role.title AS 'Job Title', department.name AS 'Department', role.salary AS Salary, CONCAT(m.first_name, ' ', m.last_name) AS 'Manager'
+    FROM employee e 
+    JOIN role ON e.role_id = role.id
+    JOIN department ON role.department_id = department.id
+    LEFT JOIN employee m ON e.manager_id = m.id;`;
+            const params = [];
+            this.view(sql, params)
+        }
+    }
+}
 
 // employee ids, first names, last names, job titles, departments, salaries, and managers
 function viewAllEmployees() {

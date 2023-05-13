@@ -35,7 +35,8 @@ const startSelect = () =>
                 display.viewAll()
             }
             if (selection.selection1 === 'Add Role') {
-                console.log('hi');
+                const display = new Role
+                display.addNew()
             }
             if (selection.selection1 === 'View All Departments') {
                 const display = new Department
@@ -156,18 +157,40 @@ class Role extends Workplace {
                         message: 'What is the title of the new role? '
                     },
                     {
-                        type: 'input',
+                        type: 'number',
                         name: 'salary',
                         message: 'What is the annual salary of the role? '
                     },
                     {
                         type: 'list',
-                        name: 'role',
+                        name: 'department',
                         message: 'Which department will contain this role? ',
                         choices: ['Doctors', 'Clinical Support', 'Patient Coordination', 'Insurance']
                     },
                 ])
-                .then((selection) => { })
+                .then((selection) => {
+                    console.log(selection.title);
+                    const title = selection.title
+                    const salary = selection.salary
+                    findID()
+                    function findID() {
+                        db.query(`SELECT id FROM department WHERE name = ?;`, selection.department, (err, results) => {
+                            if (err) { console.log(err); }
+                            const deptID = results[0].id;
+                            insertRole(title, salary, deptID)
+                        })
+                    }
+                    function insertRole(title, salary, deptID) {
+                        const sql = `INSERT INTO role (title, salary, department_id) 
+                            VALUES ('${title}', '${salary}', ${deptID})`
+                        const params = []
+                        console.log('New role added');
+                        db.query(sql, params, (err, results) => {
+                            if (err) { console.log(err); }
+                            startSelect()
+                        })
+                    }
+                })
         }
     }
 }

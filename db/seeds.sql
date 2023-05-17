@@ -20,14 +20,14 @@ VALUES
 
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
 VALUES
-("Michael", "Phelps", 1, null),
-("Don", "Quixote", 2, 1),
-("Charlette", "Thedoc", 2, 1),
-("Bonnie", "Lead", 3, null),
-("Johnny", "Rocket", 4, 4),
+("Michael", "Prouder", 1, null),
+("Don", "Jenkins", 2, 1),
+("Charlette", "Scarlet", 2, 1),
+("Bonnie", "Ledder", 3, null),
+("Johnny", "Prince", 4, 4),
 ("Bett", "Beclean", 5, 4),
 ("Berenice", "Ankind", 6, null),
-("Get", "Yomony", 7, 7),
-("Isaiah", "Hello", 8, 7),
-("Aiwanna", "Dacash", 9, null),
-("Isa", "Leegood", 10, 10)
+("Geff", "Harmony", 7, 7),
+("Isaiah", "Haiduke", 8, 7),
+("Aiwanna", "Smith", 9, null),
+("Isa", "Montoya", 10, 10)

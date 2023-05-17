@@ -156,7 +156,7 @@ class Employee extends Workplace {
                         type: 'list',
                         name: 'manager',
                         message: 'Who is the manager of the employee? ',
-                        choices: ['Michael Phelps', 'Bonnie Lead', 'Berenice Ankind', 'Aiwanna Dacash']
+                        choices: ['Michael Prouder', 'Bonnie Ledder', 'Berenice Ankind', 'Aiwanna Smith']
                     },
                 ])
                 .then((selection) => {

@@ -58,7 +58,7 @@ class Workplace {
         this.view = (sql, params) => {
             db.query(sql, params, (err, result) => {
                 if (err) {
-                    console.log('oh no!');
+                    console.log(err);
                 }
                 console.table(result)
                 startSelect();
@@ -85,10 +85,8 @@ class Employee extends Workplace {
                 if (err) { console.log(err); }
                 for (let i = 0; i < results.length; i++) {
                     const e = results[i].first_name + ' ' + results[i].last_name
-                    console.log(e);
                     eArray.push(e);
                 }
-                console.log(eArray);
             })
             let rArray = []
             db.query(`SELECT title FROM role;`, [], (err, results) => {
@@ -119,17 +117,13 @@ class Employee extends Workplace {
                                 }
                             ])
                             .then((newRole) => {
-                                console.log(newRole);
                                 const emp = employee.employee.split(' ')[1]
-                                console.log(emp);
                                 let roleID
                                 db.query(`SELECT id FROM role WHERE title = ?;`, newRole.newRole, (err, results) => {
                                     if (err) { console.log(err); }
-                                    console.log(results[0].id);
                                     roleID = results[0].id;
                                     db.query(`UPDATE employee SET role_id = ? WHERE last_name = ?;`, [roleID, emp], (err, results) => {
                                         if (err) { console.log(err); }
-                                        console.log(results);
                                         startSelect()
                                     })
                                 })
@@ -166,7 +160,6 @@ class Employee extends Workplace {
                     },
                 ])
                 .then((selection) => {
-                    console.log(selection.role);
                     const fName = selection.firstName
                     const lName = selection.lastName
                     const mFirstName = selection.manager.split(' ')[0]
@@ -231,7 +224,6 @@ class Role extends Workplace {
                     },
                 ])
                 .then((selection) => {
-                    console.log(selection.title);
                     const title = selection.title
                     const salary = selection.salary
                     findID()

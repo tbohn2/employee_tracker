@@ -48,7 +48,7 @@ const startSelect = () =>
                 display.addNew()
             }
             if (selection.selection1 === 'Quit') {
-                console.log('hi');
+                process.exit();
             }
         }
         )
@@ -120,13 +120,16 @@ class Employee extends Workplace {
                             ])
                             .then((newRole) => {
                                 console.log(newRole);
-                                console.log(employee);
+                                const emp = employee.employee.split(' ')[1]
+                                console.log(emp);
+                                let roleID
                                 db.query(`SELECT id FROM role WHERE title = ?;`, newRole.newRole, (err, results) => {
                                     if (err) { console.log(err); }
                                     console.log(results[0].id);
                                     roleID = results[0].id;
-                                    db.query(`UPDATE employee SET role_id = ? WHERE name = ?;`, roleID, employee, (err, results) => {
+                                    db.query(`UPDATE employee SET role_id = ? WHERE last_name = ?;`, [roleID, emp], (err, results) => {
                                         if (err) { console.log(err); }
+                                        console.log(results);
                                         startSelect()
                                     })
                                 })

@@ -28,7 +28,8 @@ const startSelect = () =>
                 display.addNew()
             }
             if (selection.selection1 === 'Update Employee Role') {
-                console.log('hi');
+                const display = new Employee
+                display.update()
             }
             if (selection.selection1 === 'View All Roles') {
                 const display = new Role
@@ -78,6 +79,63 @@ class Employee extends Workplace {
             const params = [];
             this.view(sql, params)
         }
+        this.update = () => {
+            let eArray = []
+            db.query(`SELECT first_name, last_name FROM employee;`, [], (err, results) => {
+                if (err) { console.log(err); }
+                for (let i = 0; i < results.length; i++) {
+                    const e = results[i].first_name + ' ' + results[i].last_name
+                    console.log(e);
+                    eArray.push(e);
+                }
+                console.log(eArray);
+            })
+            let rArray = []
+            db.query(`SELECT title FROM role;`, [], (err, results) => {
+                if (err) { console.log(err); }
+                for (let i = 0; i < results.length; i++) {
+                    rArray.push(results[i].title);
+                }
+                selectEmployee()
+            })
+            function selectEmployee() {
+                inquirer
+                    .prompt([
+                        {
+                            type: 'list',
+                            name: 'employee',
+                            message: 'Which employee would you like to update?',
+                            choices: eArray
+                        }
+                    ])
+                    .then((employee) => {
+                        inquirer
+                            .prompt([
+                                {
+                                    type: 'list',
+                                    name: 'newRole',
+                                    message: 'What is the new role of the employee?',
+                                    choices: rArray
+                                }
+                            ])
+                            .then((newRole) => {
+                                console.log(newRole);
+                                console.log(employee);
+                                db.query(`SELECT id FROM role WHERE title = ?;`, newRole.newRole, (err, results) => {
+                                    if (err) { console.log(err); }
+                                    console.log(results[0].id);
+                                    roleID = results[0].id;
+                                    db.query(`UPDATE employee SET role_id = ? WHERE name = ?;`, roleID, employee, (err, results) => {
+                                        if (err) { console.log(err); }
+                                        startSelect()
+                                    })
+                                })
+                            })
+                    })
+
+            }
+        }
+
         this.addNew = () => {
             inquirer
                 .prompt([
